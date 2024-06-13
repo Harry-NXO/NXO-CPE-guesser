@@ -1,0 +1,23 @@
+[
+  [
+    "cpe:2.3:a:adobe:connect_pro_add-in_for_microsoft_outlook",
+    [
+      "1.0.0"
+    ]
+  ],
+  [
+    "cpe:2.3:a:emc:my_documentum_for_microsoft_outlook",
+    [
+      "6.7",
+      "6.7.1",
+      "6.7.3"
+    ]
+  ],
+  [
+    "cpe:2.3:a:fortinet:fortiauthenticator_agent_for_microsoft_outlook_web_access",
+    [
+      "2.1",
+      "2.2"
+    ]
+  ]
+]

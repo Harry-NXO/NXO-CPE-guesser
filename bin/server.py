@@ -15,6 +15,7 @@ port = settings.server.port
 runPath = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(runPath, ".."))
 from lib.cpeguesser import CPEGuesser
+from lib.utils import ManageSearch
 
 
 class Search:
@@ -27,7 +28,10 @@ class Search:
             resp.status = falcon.HTTP_400
             resp.media = "Missing query array or incorrect JSON format"
             return
-
+        print("Q:/n",q)
+        request_version = q["version"] if "version" in q else "" 
+        request_type = q["type"] if "type" in q else "a" 
+        request_limit = q["limit"] if "limit" in q else 5 
         if "query" in q:
             pass
         else:
@@ -36,7 +40,10 @@ class Search:
             return
 
         cpeGuesser = CPEGuesser()
-        resp.media = cpeGuesser.guessCpe(q["query"])
+        sorted_list = cpeGuesser.guessCpe(q["query"],request_type)
+        searchManager= ManageSearch()
+        best_matching_version=searchManager.search(sorted_list,request_type,q["query"],request_version,request_limit)
+        resp.media = best_matching_version
 
 
 if __name__ == "__main__":
@@ -44,7 +51,7 @@ if __name__ == "__main__":
     app.add_route("/search", Search())
 
     try:
-        with make_server("", port, app) as httpd:
+        with make_server("0.0.0.0", port, app) as httpd:
             print(f"Serving on port {port}...")
             httpd.serve_forever()
     except OSError as e:

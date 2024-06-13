@@ -60,6 +60,9 @@ class CPEHandler(xml.sax.ContentHandler):
             for word in canonize(to_insert["product"]):
                 insert(word=word, cpe=to_insert["cpeline"])
                 self.wordcount += 1
+            for version in canonize(to_insert["cpeversion"], version=True):
+                insert(word=to_insert["cpeline"], cpe=version, version=True)
+                self.wordcount += 1
             self.record = {}
             self.itemcount += 1
             if self.itemcount % 5000 == 0:
@@ -80,21 +83,31 @@ def CPEExtractor(cpe=None):
     for cpeentry in cpefield[:5]:
         cpeline = f"{cpeline}:{cpeentry}"
     record["cpeline"] = cpeline[1:]
+    cpe_version = ""
+    for cpe_with_version in cpefield[:6]:
+        cpe_version = f"{cpe_version}:{cpe_with_version}"
+    record["cpeversion"] = cpe_version[1:]
     return record
 
 
-def canonize(value=None):
+def canonize(value=None, version=False):
     value = value.lower()
-    words = value.split("_")
+    words = value.split(":")[-2:] if version else value.split("_")
     return words
 
 
-def insert(word=None, cpe=None):
+def insert(word=None, cpe=None, version=False):
     if cpe is None or word is None:
         return False
-    rdb.sadd(f"w:{word}", cpe)
-    rdb.zadd(f"s:{word}", {cpe: 1}, incr=True)
-    rdb.zadd("rank:cpe", {cpe: 1}, incr=True)
+    if version:
+        part=word.split(':')
+        rdb.sadd(f"w_{part[2]}_v:{word}", cpe)
+        rdb.zadd(f"s_{part[2]}_v:{word}", {cpe: 1}, incr=True)
+        rdb.zadd("rank_v:cpe", {cpe: 1}, incr=True)
+    else:
+        rdb.sadd(f"w:{word}", cpe)
+        rdb.zadd(f"s:{word}", {cpe: 1}, incr=True)
+        rdb.zadd("rank:cpe", {cpe: 1}, incr=True)
 
 
 if __name__ == "__main__":

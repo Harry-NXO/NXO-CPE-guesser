@@ -1,8 +1,8 @@
 server:
-  port: 8000
+  port: 8080
 redis:
   host: 127.0.0.1
   port: 6379
 cpe:
-  path: '../data/official-cpe-dictionary_v2.3.xml'
+  path: '/home/gboulle/Documents/GDA-NXO/open-cve/cpe-guesser/data/official-cpe-dictionary_v2.3.xml'
   source: 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz'

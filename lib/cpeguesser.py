@@ -17,22 +17,35 @@ class CPEGuesser:
             decode_responses=True,
         )
 
-    def guessCpe(self, words):
+    def guessCpe(self, words, asset_type="a"):
         k = []
         for keyword in words:
             k.append(f"w:{keyword.lower()}")
 
         maxinter = len(k)
         cpes = []
-        for x in reversed(range(maxinter)):
-            ret = self.rdb.sinter(k[x])
-            cpes.append(list(ret))
-        result = set(cpes[0]).intersection(*cpes)
+        # Old script that i found useless but we will keep it we never know
+        # for x in reversed(range(maxinter)):
+        #     ret = self.rdb.sinter(k[x])
+        #     cpes.append(list(ret))
+        # result = set(cpes[0]).intersection(*cpes)
+        result = self.rdb.sinter(k)
 
         ranked = []
-
+        
         for cpe in result:
-            rank = self.rdb.zrank("rank:cpe", cpe)
-            ranked.append((rank, cpe))
-
+            # Filter by asset type
+            if f"cpe:2.3:{asset_type}:" in cpe:
+                parts = cpe.split(':')
+                # Get all available versions for a given type-editor-product  
+                versions = self.rdb.smembers(f"w_{asset_type}_v:{cpe}")
+                if len(parts) >= 1:
+                    # remove the product string from the versions set
+                    versions.discard(parts[-1])
+                    # Cast the versions to a list an sort it  
+                    versions = list(versions)
+                    versions.sort()
+                #get the index ranking for each given type-editor-product 
+                rank = self.rdb.zrank("rank:cpe", cpe)
+                ranked.append((cpe, versions))
         return sorted(ranked)
