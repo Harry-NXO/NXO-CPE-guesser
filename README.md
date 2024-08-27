@@ -51,6 +51,25 @@ Install the project dependency with the following command
     $ pip install -r requirements.txt  
 ```
 
+Create an empty xml file in 'data' directory
+
+```bash
+    mkdir ./data/official-cpe-dictionary_v2.3.xml
+```
+
+Setup your configuration in *config => settings.yaml* parameters as follow:  
+
+```yaml
+    server:
+        port: your_chosen_port
+    redis:
+        host: 127.0.0.1
+        port: your_chosen_port
+    cpe:
+        path: 'absolute_path_to/data/official-cpe-dictionary_v2.3.xml'
+        source: 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz'
+```
+
 Initialise the Redis database with the following command
 
 ```bash

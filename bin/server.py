@@ -4,6 +4,7 @@
 import os
 import sys
 import falcon
+from falcon_cors import CORS
 from wsgiref.simple_server import make_server
 import json
 from dynaconf import Dynaconf
@@ -31,7 +32,7 @@ class Search:
         print("Q:/n",q)
         request_version = q["version"] if "version" in q else "" 
         request_type = q["type"] if "type" in q else "a" 
-        request_limit = q["limit"] if "limit" in q else 5 
+        request_limit = q["limit"] if "limit" in q else float('inf')
         if "query" in q:
             pass
         else:
@@ -48,6 +49,15 @@ class Search:
 
 if __name__ == "__main__":
     app = falcon.App()
+    cors = CORS(
+    allow_origins_list=['http://localhost:3000', 'http://localhost:8080'],
+    allow_methods_list=['GET', 'POST'],
+    allow_headers_list=['Content-Type', 'Authorization'],
+    expose_headers_list=['X-Custom-Header'],
+    allow_credentials_all_origins=True
+)
+    app.add_middleware(cors.middleware)
+
     app.add_route("/search", Search())
 
     try:

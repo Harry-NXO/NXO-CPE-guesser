@@ -22,8 +22,8 @@ class CPEGuesser:
         for keyword in words:
             k.append(f"w:{keyword.lower()}")
 
-        maxinter = len(k)
-        cpes = []
+        # maxinter = len(k)
+        # cpes = []
         # Old script that i found useless but we will keep it we never know
         # for x in reversed(range(maxinter)):
         #     ret = self.rdb.sinter(k[x])
@@ -46,6 +46,6 @@ class CPEGuesser:
                     versions = list(versions)
                     versions.sort()
                 #get the index ranking for each given type-editor-product 
-                rank = self.rdb.zrank("rank:cpe", cpe)
+                # rank = self.rdb.zrank("rank:cpe", cpe)
                 ranked.append((cpe, versions))
         return sorted(ranked)

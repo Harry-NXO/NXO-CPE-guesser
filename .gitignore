@@ -2,3 +2,4 @@ bin/__pycache__/
 lib/__pycache__/
 data/*.xml
 data/*.gz
+lib/python*/site-packages
