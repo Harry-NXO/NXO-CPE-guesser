@@ -1,3 +1,4 @@
 redis
 falcon
 dynaconf
+falcon_cors

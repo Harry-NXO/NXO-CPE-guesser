@@ -3,6 +3,7 @@
 
 import os
 import sys
+
 import falcon
 from falcon_cors import CORS
 from wsgiref.simple_server import make_server
@@ -11,7 +12,7 @@ from dynaconf import Dynaconf
 
 # Configuration
 settings = Dynaconf(settings_files=["../config/settings.yaml"])
-port = settings.server.port
+port = 8080
 
 runPath = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(runPath, ".."))

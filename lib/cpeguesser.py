@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import redis
+import os
 from dynaconf import Dynaconf
 
 # Configuration
@@ -11,8 +12,8 @@ settings = Dynaconf(settings_files=["../config/settings.yaml"])
 class CPEGuesser:
     def __init__(self):
         self.rdb = redis.Redis(
-            host=settings.redis.host,
-            port=settings.redis.port,
+            host='127.0.0.1',
+            port='6379',
             db=8,
             decode_responses=True,
         )
